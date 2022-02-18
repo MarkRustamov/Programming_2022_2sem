@@ -173,18 +173,11 @@ public:
         }
         return *this;
     }
-    Polynom operator>> (int value){
-        for (int i = 0; i < power; i++){
-            odds[i] >>= value;
-        }
-        return *this;
-    }
-    Polynom operator<< (int value){
-        for (int i = 0; i < power; i++){
-            odds[i] <<= value;
-        }
-        return *this;
-    }
+
+    friend std::ostream& operator<<(std::ostream &os, const Polynom polynom_);
+
+    friend std::istream& operator>>(std::istream &in, Polynom polynom_);
+
     Polynom operator[](int value){
         std::cout << "Coeff " << value << " is " << odds[value - 1] << std::endl;
     }
@@ -200,27 +193,30 @@ public:
     ~Polynom(){};
 };
 
+std::ostream& operator<<(std::ostream &os, const Polynom polynom_){
+    for (int i = polynom_.power - 1; i > -1; i--){
+        if (polynom_.odds[i] != 0){
+            os << polynom_.odds[i] << "x^" << i << " ";
+        }
+    }
+    return os;
+}
+
+std::istream& operator>>(std::istream &in, Polynom polynom_){
+    in >> polynom_.power;
+    polynom_.power++;
+    for (int i = 0; i < polynom_.power; i++){
+        in >> polynom_.odds[i];
+    }
+    return in;
+}
+
 int main(){
     int coeff[5] = {3, 4, 7, 6, 8};
     int coeff1[3] = {2, 9, 4};
     int p1 = 2;
     int p = 4;
-    Polynom poly_1(coeff, p);
-    Polynom poly_2(coeff1, p1);
-    Polynom poly_3 = poly_2 - poly_1;
-    poly_1.Show();
-    poly_2.Show();
-    poly_3.Show();
-    Polynom poly_4(poly_1);
-    poly_4 += poly_2;
-    poly_4.Show();
-    Polynom poly_5 = poly_2;
-    poly_5 -= poly_3;
-    poly_5.Show();
-    Polynom poly_6(poly_1);
-    poly_6 = poly_6 << 2;
-    poly_6.Show();
-    Polynom poly_7 = - poly_1;
-    poly_7.Show();
+    Polynom poly(coeff, p);
+    std::cout << poly;
     return 0;
 }
