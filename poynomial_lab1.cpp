@@ -1,164 +1,171 @@
 #include <iostream>
+#include <vector>
 
 class Polynom{
 private:
-    int odds[10];
-    int power;
+    std::vector<int> odds;
 public:
-    Polynom (int odds_[], int power_){
-        power = power_ + 1;
-        for (int i = 0; i < power; i++){
-            odds[i] = odds_[i];
+    Polynom (std::vector<int> odds_){
+        for (int i = 0; i < odds_.size(); i++){
+            odds.push_back(odds_[i]);
         }
     }
     Polynom (const Polynom &polynom_){
-        power = polynom_.power;
-        for (int i = 0; i < power; i++){
-            odds[i] = polynom_.odds[i];
+        for (int i = 0; i < polynom_.odds.size(); i++){
+            odds.push_back(polynom_.odds[i]);
         }
     }
     Polynom operator=(const Polynom &polynom_){
-        power = polynom_.power;
-        for (int i = 0; i < power; i++){
-            odds[i] = polynom_.odds[i];
+        if (odds.size() == 0){
+            for (int i = 0; i < polynom_.odds.size(); i++){
+                odds.push_back(polynom_.odds[i]);
+            }
+        }
+        else{
+            odds.clear();
+            for (int i = 0; i < polynom_.odds.size(); i++){
+                odds.push_back(polynom_.odds[i]);
+            }
         }
         return *this;
     }
-    Polynom operator==(const Polynom &polynom_){
-        bool isEqual = true;;
-        if (power != polynom_.power){
+    bool operator==(const Polynom &polynom_){
+        bool isEqual = true;
+        if (odds.size() != polynom_.odds.size()){
             isEqual = false;
         }
         else{
-            for (int i = 0; i < power; i++){
+            for (int i = 0; i < odds.size(); i++){
                 if (odds[i] != polynom_.odds[i]){
                     isEqual = false;
                 }
             }
         }
-        if (isEqual){
-            std::cout << "YES" << std::endl;
-        }
-        else{
-            std::cout << "NO" << std::endl;
-        }
+        return isEqual;
     }
-    Polynom operator!=(const Polynom &polynom_){
-        bool isNotEqual = false;;
-        if (power != polynom_.power){
-            isNotEqual = true;
+    bool operator!=(const Polynom &polynom_){
+        bool isEqual = true;
+        if (odds.size() != polynom_.odds.size()){
+            isEqual = false;
         }
         else{
-            for (int i = 0; i < power; i++){
+            for (int i = 0; i < odds.size(); i++){
                 if (odds[i] != polynom_.odds[i]){
-                    isNotEqual = true;
+                    isEqual = false;
                 }
             }
         }
-        if (isNotEqual){
-            std::cout << "YES" << std::endl;
-        }
-        else{
-            std::cout << "NO" << std::endl;
-        }
+        return !isEqual;
     }
     Polynom operator+(Polynom polynom_){
-        if (polynom_.power > power){
-            for (int i = 0; i < power; i++){
+        if (polynom_.odds.size() > odds.size()){
+            for (int i = 0; i < odds.size(); i++){
                 polynom_.odds[i] += odds[i];
             }
         }
         else{
-            for (int i = 0; i < power; i++){
+            for (int i = polynom_.odds.size(); i < odds.size(); i++){
+                polynom_.odds.push_back(0);
+            }
+            for (int i = 0; i < odds.size(); i++){
                 int help = polynom_.odds[i];
                 polynom_.odds[i] = odds[i] + help;
             }
-            polynom_.power = power;
         }
         return polynom_;
     }
     Polynom operator+=(const Polynom &polynom_){
-        if (power > polynom_.power){
-            for (int i = 0; i < polynom_.power; i++){
+        if (odds.size() > polynom_.odds.size()){
+            for (int i = 0; i < polynom_.odds.size(); i++){
                 odds[i] += polynom_.odds[i];
             }
         }
         else{
-            for (int i = 0; i < polynom_.power; i++){
+            for (int i = odds.size(); i < polynom_.odds.size(); i++){
+                odds.push_back(0);
+            }
+            for (int i = 0; i < polynom_.odds.size(); i++){
                 int help = odds[i];
                 odds[i] = polynom_.odds[i] + help;
             }
-            power = polynom_.power;
         }
         return *this;
     }
     Polynom operator-(const Polynom &polynom_){
-        int h_odds[10];
-        int h_power = power;
-        for (int i = 0; i < h_power; i++){
-            h_odds[i] = odds[i];
+        std::vector<int> h_odds;
+        for (int i = 0; i < odds.size(); i++){
+            h_odds.push_back(odds[i]);
         }
 
-        if (h_power > polynom_.power){
-            for (int i = 0; i < polynom_.power; i++){
+        if (odds.size() > polynom_.odds.size()){
+            for (int i = 0; i < polynom_.odds.size(); i++){
                 h_odds[i] -= polynom_.odds[i];
             }
         }
         else{
-            for (int i = h_power; i < polynom_.power; i++){
-                h_odds[i] = 0;
+            for (int i = odds.size(); i < polynom_.odds.size(); i++){
+                h_odds.push_back(0);
             }
-            for (int i = 0; i < polynom_.power; i++){
+            for (int i = 0; i < polynom_.odds.size(); i++){
                 h_odds[i] -= polynom_.odds[i];
             }
-            h_power = polynom_.power;
         }
-        Polynom h_poly(h_odds, h_power-1);
+        Polynom h_poly(h_odds);
         return h_poly;
     }
-    Polynom operator-(){
-        for (int i = 0; i < power; i++){
+    Polynom &operator-(){
+        for (int i = 0; i < odds.size(); i++){
             odds[i] = -odds[i];
         }
         return *this;
     }
     Polynom operator-=(const Polynom &polynom_){
-        if (power > polynom_.power){
-            for (int i = 0; i < polynom_.power; i++){
+        if (odds.size() > polynom_.odds.size()){
+            for (int i = 0; i < polynom_.odds.size(); i++){
                 odds[i] -= polynom_.odds[i];
             }
         }
         else{
-            for (int i = power; i < polynom_.power; i++){
-                odds[i] = 0;
+            for (int i = odds.size(); i < polynom_.odds.size(); i++){
+                odds.push_back(0);
             }
-            for (int i = 0; i < polynom_.power; i++){
+            for (int i = 0; i < polynom_.odds.size(); i++){
                 odds[i] -= polynom_.odds[i];
             }
-            power = polynom_.power;
         }
         return *this;
     }
-    Polynom operator*(int value){
-        for (int i = 0; i < power; i++){
-            odds[i] *= value;
+    Polynom operator*(const Polynom& polynom_){
+        std::vector<int> h_odds(polynom_.odds.size() + odds.size());
+        for (int i = 0; i < polynom_.odds.size(); i++){
+            for (int j = 0; j < odds.size(); j++){
+                h_odds[i+j] += polynom_.odds[i] * odds[j];
+            }
         }
-        return *this;
+        Polynom h_poly(h_odds);
+        return h_poly;
     }
     Polynom operator/(int value){
         if (value == 0){
             std::cout << "Error /0!" << std::endl;
         }
         else{
-            for (int i = 0; i < power; i++){
+            for (int i = 0; i < odds.size(); i++){
                 odds[i] /= value;
             }
         }
         return *this;
     }
-    Polynom operator*=(int value){
-        for (int i = 0; i < power; i++){
-            odds[i] *= value;
+    Polynom operator*=(const Polynom& polynom_){
+        std::vector<int> h_odds(polynom_.odds.size() + odds.size());
+        for (int i = 0; i < polynom_.odds.size(); i++){
+            for (int j = 0; j < odds.size(); j++){
+                h_odds[i+j] += polynom_.odds[i] * odds[j];
+            }
+        }
+        odds.clear();
+        for (int i = 0; i < h_odds.size(); i++){
+            odds.push_back(h_odds[i]);
         }
         return *this;
     }
@@ -167,7 +174,7 @@ public:
             std::cout << "Error /0!" << std::endl;
         }
         else{
-            for (int i = 0; i < power; i++){
+            for (int i = 0; i < odds.size(); i++){
                 odds[i] /= value;
             }
         }
@@ -176,25 +183,14 @@ public:
 
     friend std::ostream& operator<<(std::ostream &os, const Polynom polynom_);
 
-    friend std::istream& operator>>(std::istream &in, Polynom polynom_);
-
     Polynom operator[](int value){
         std::cout << "Coeff " << value << " is " << odds[value - 1] << std::endl;
-    }
-    void Show(){
-        for (int i = power - 1; i > -1; i--){
-            if (odds[i] != 0){
-
-                std::cout << odds[i] << "x^" << i << " ";
-            }
-        }
-        std::cout << std::endl;
     }
     ~Polynom(){};
 };
 
 std::ostream& operator<<(std::ostream &os, const Polynom polynom_){
-    for (int i = polynom_.power - 1; i > -1; i--){
+    for (int i = polynom_.odds.size() - 1; i > -1; i--){
         if (polynom_.odds[i] != 0){
             os << polynom_.odds[i] << "x^" << i << " ";
         }
@@ -202,21 +198,26 @@ std::ostream& operator<<(std::ostream &os, const Polynom polynom_){
     return os;
 }
 
-std::istream& operator>>(std::istream &in, Polynom polynom_){
-    in >> polynom_.power;
-    polynom_.power++;
-    for (int i = 0; i < polynom_.power; i++){
-        in >> polynom_.odds[i];
+std::istream& operator>>(std::istream &in, Polynom &polynom_){
+    int power_;
+    int current;
+    std::vector<int> odds_;
+    in >> power_;
+    for (int i = 0; i < power_ + 1; i++){
+        in >> current;
+        odds_.push_back(current);
     }
+    polynom_ = Polynom(odds_);
     return in;
 }
 
-int main(){
-    int coeff[5] = {3, 4, 7, 6, 8};
-    int coeff1[3] = {2, 9, 4};
-    int p1 = 2;
-    int p = 4;
-    Polynom poly(coeff, p);
+int main(int argc, const char* argv[]){
+    std::vector<int> coeff = {1, 1};
+    std::vector<int> coeff1 = {-3, 1};
+    Polynom poly(coeff);
+    Polynom poly_1(coeff1);
+    poly *= poly_1;
+    poly *= poly;
     std::cout << poly;
     return 0;
 }
