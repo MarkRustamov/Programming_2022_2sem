@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 class Point{
 protected:
@@ -35,7 +36,7 @@ public:
 class Lline : public Point{
 private:
     int number;
-    Point dots[20];
+    std::vector<Point> dots;
 public:
     Lline(){
         number = 0;
@@ -43,20 +44,32 @@ public:
     Lline(const Lline &line_){
         number = line_.number;
         for (int i = 0; i < number; i++){
-            dots[i] = line_.dots[i];
+            dots.push_back(line_.dots[i]);
         }
     }
     Lline operator=(const Lline line_){
+        if (number > 0){
+            dots.clear();
+        }
         number = line_.number;
         for (int i = 0; i < number; i++){
-            dots[i] = line_.dots[i];
+            dots.push_back(line_.dots[i]);
         }
         return *this;
     }
-    void AddPoint(int _x, int _y){
-        Point cur(_x, _y);
-        dots[number] = cur;
-        number++;
+    Lline (std::vector<int> dots_){
+        if (dots_.size() % 2 != 0){
+            std::cout << "ERROR\n";
+        }
+        else{
+            int i = 0;
+            while (i < dots_.size()){
+                Point cur(dots_[i], dots_[i+1]);
+                dots.push_back(cur);
+                i = i + 2;
+            }
+            number = dots.size();
+        }
     }
     void Getl(){
         for (int i = 0; i < number; i++){
@@ -79,7 +92,7 @@ public:
 class ZLline : public Point{
 private:
     int number;
-    Point dots[20];
+    std::vector<Point> dots;
 public:
     ZLline(){
         number = 0;
@@ -87,20 +100,32 @@ public:
     ZLline(const ZLline &line_){
         number = line_.number;
         for (int i = 0; i < number; i++){
-            dots[i] = line_.dots[i];
+            dots.push_back(line_.dots[i]);
         }
     }
     ZLline operator=(const ZLline line_){
+        if (number > 0){
+            dots.clear();
+        }
         number = line_.number;
         for (int i = 0; i < number; i++){
-            dots[i] = line_.dots[i];
+            dots.push_back(line_.dots[i]);
         }
         return *this;
     }
-    void AddPoint(int _x, int _y){
-        Point cur(_x, _y);
-        dots[number] = cur;
-        number++;
+    ZLline (std::vector<int> dots_){
+        if (dots_.size() % 2 != 0){
+            std::cout << "ERROR\n";
+        }
+        else{
+            int i = 0;
+            while (i < dots_.size()){
+                Point cur(dots_[i], dots_[i+1]);
+                dots.push_back(cur);
+                i = i + 2;
+            }
+            number = dots.size();
+        }
     }
     void Getl(){
         for (int i = 0; i < number; i++){
@@ -128,12 +153,19 @@ private:
     Point dots[3];
 public:
     Triangle(int x1, int y1, int x2, int y2, int x3, int y3){
-        Point cur1(x1, y1);
-        Point cur2(x2, y2);
-        Point cur3(x3, y3);
-        dots[0] = cur1;
-        dots[1] = cur2;
-        dots[2] = cur3;
+        float k = (y1 - y2) / (x1 - x2);
+        float b = y1 - k * x1;
+        if (y3 - k * x3 + b > 1){
+            Point cur1(x1, y1);
+            Point cur2(x2, y2);
+            Point cur3(x3, y3);
+            dots[0] = cur1;
+            dots[1] = cur2;
+            dots[2] = cur3;
+        }
+        else{
+            std::cout << "ERROR\n";
+        }
     }
     Triangle(const Triangle &triangle_){
         for (int i = 0; i < 3; i++){
@@ -218,7 +250,7 @@ public:
 
 class Polygon : public Point{
 private:
-    Point dots[20];
+    std::vector<Point> dots;
     int number;
 public:
     Polygon (){
@@ -227,20 +259,32 @@ public:
     Polygon (const Polygon &polygon_){
         number = polygon_.number;
         for (int i = 0; i < number; i++){
-            dots[i] = polygon_.dots[i];
+            dots.push_back(polygon_.dots[i]);
         }
     }
     Polygon operator=(const Polygon polygon_){
+        if (number > 0){
+            dots.clear();
+        }
         number = polygon_.number;
         for (int i = 0; i < number; i++){
-            dots[i] = polygon_.dots[i];
+            dots.push_back(polygon_.dots[i]);
         }
         return *this;
     }
-    void AddPPoint(int x_, int y_){
-        Point cur(x_, y_);
-        dots[number] = cur;
-        number++;
+    Polygon (std::vector<int> dots_){
+        if (dots_.size() % 2 != 0){
+            std::cout << "ERROR\n";
+        }
+        else{
+            int i = 0;
+            while (i < dots_.size()){
+                Point cur(dots_[i], dots_[i+1]);
+                dots.push_back(cur);
+                i = i + 2;
+            }
+            number = dots.size();
+        }
     }
     float PPerimetr(){
         float result = 0, dx, dy;
@@ -298,45 +342,5 @@ public:
 };
 
 int main(int argc, char* argv[]){
-    Point my_point(2, 2);
-    Point zdraste(my_point);
-    std::cout << my_point.GetX() << " " << my_point.GetY() << std::endl;
-    std::cout << zdraste.GetX() << " " << zdraste.GetY() << std::endl;
-    Lline first;
-    ZLline first_;
-    first.AddPoint(1, 2);
-    first.AddPoint(3, 3);
-    first.AddPoint(10, 9);
 
-    first_.AddPoint(1, 2);
-    first_.AddPoint(3, 3);
-    first_.AddPoint(10, 9);
-    first.Getl();
-    first.Perimetr();
-    first_.Perimetr();
-    Lline second = first;
-    second.Getl();
-    std::cout << "\n";
-    Triangle my_first_triangle(1, 1, 10, 10, 11, 1);
-    Triangle my_second_triangle = my_first_triangle;
-    std::cout << my_first_triangle.TPerimetr() << std::endl;
-    my_first_triangle.GetT();
-    std::cout << my_first_triangle.TSquare() << std::endl;
-    Trapezoid my_first_trapezoid(4, 6, 1, 1, 4, 10);
-    Trapezoid my_second_trapezoid = my_first_trapezoid;
-    std::cout << my_first_trapezoid.TRPerimetr() << std::endl;
-    std::cout << my_first_trapezoid.TRSquare() << std::endl;
-    Polygon my_first_polygon;
-    my_first_polygon.AddPPoint(1, 1);
-    my_first_polygon.AddPPoint(6, 1);
-    my_first_polygon.AddPPoint(6, 6);
-    my_first_polygon.AddPPoint(1, 6);
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << my_first_polygon.PSquare() << std::endl;
-    std::cout << my_first_polygon.PPerimetr() << std::endl;
-    std::cout << std::endl;
-    RPolygon my_first_rpolygon(5, 5, 4, 6);
-    std::cout << my_first_rpolygon.RPPerimetr() << std::endl;
-    std::cout << my_first_rpolygon.RPSquare() << std::endl;
 }
