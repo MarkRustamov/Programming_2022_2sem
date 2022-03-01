@@ -153,9 +153,12 @@ private:
     Point dots[3];
 public:
     Triangle(int x1, int y1, int x2, int y2, int x3, int y3){
-        float k = (y1 - y2) / (x1 - x2);
-        float b = y1 - k * x1;
-        if (y3 - k * x3 + b > 1){
+        int a1 = x2 - x1;
+        int a2 = y2 - y1;
+        int b1 = x3 - x1;
+        int b2 = y3 - y1;
+        float cos_l = (a1 * b1 + a2 * b2) / (sqrt(a1*a1 + a2*a2) * sqrt(b1*b1 + b2*b2));
+        if (cos_l != 1){
             Point cur1(x1, y1);
             Point cur2(x2, y2);
             Point cur3(x3, y3);
@@ -342,5 +345,6 @@ public:
 };
 
 int main(int argc, char* argv[]){
-
+    std::cout <<"Hello world!\n";
+    return 0;
 }
