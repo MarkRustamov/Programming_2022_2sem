@@ -5,13 +5,16 @@ class Polynom{
 private:
     std::vector<int> odds;
 public:
+    Polynom (){
+        odds.push_back(0);
+    }
     Polynom (std::vector<int> odds_){
         for (int i = 0; i < odds_.size(); i++){
             odds.push_back(odds_[i]);
         }
     }
     Polynom (const Polynom &polynom_){
-        for (int i = 0; i < polynom_.odds.size(); i++){
+        for (int i = polynom_.odds.size() - 1; i > -1 ; i--){
             odds.push_back(polynom_.odds[i]);
         }
     }
@@ -136,7 +139,7 @@ public:
         return *this;
     }
     Polynom operator*(const Polynom& polynom_){
-        std::vector<int> h_odds(polynom_.odds.size() + odds.size());
+        std::vector<int> h_odds(polynom_.odds.size() + odds.size() - 1);
         for (int i = 0; i < polynom_.odds.size(); i++){
             for (int j = 0; j < odds.size(); j++){
                 h_odds[i+j] += polynom_.odds[i] * odds[j];
@@ -157,7 +160,7 @@ public:
         return *this;
     }
     Polynom operator*=(const Polynom& polynom_){
-        std::vector<int> h_odds(polynom_.odds.size() + odds.size());
+        std::vector<int> h_odds(polynom_.odds.size() + odds.size() - 1);
         for (int i = 0; i < polynom_.odds.size(); i++){
             for (int j = 0; j < odds.size(); j++){
                 h_odds[i+j] += polynom_.odds[i] * odds[j];
@@ -183,8 +186,8 @@ public:
 
     friend std::ostream& operator<<(std::ostream &os, const Polynom polynom_);
 
-    Polynom operator[](int value){
-        std::cout << "Coeff " << value << " is " << odds[value - 1] << std::endl;
+    int operator[](int value){
+        return odds[value];
     }
     ~Polynom(){};
 };
@@ -212,12 +215,12 @@ std::istream& operator>>(std::istream &in, Polynom &polynom_){
 }
 
 int main(int argc, const char* argv[]){
-    std::vector<int> coeff = {1, 1};
-    std::vector<int> coeff1 = {-3, 1};
-    Polynom poly(coeff);
-    Polynom poly_1(coeff1);
-    poly *= poly_1;
-    poly *= poly;
-    std::cout << poly;
+    std::vector<int> koef = {1, 4};
+    std::vector<int> koef1 = {1, 4, 1};
+    Polynom poly(koef);
+    Polynom poly_(koef1);
+    Polynom res;
+    res = poly * poly_;
+    std::cout << res[1];
     return 0;
 }
